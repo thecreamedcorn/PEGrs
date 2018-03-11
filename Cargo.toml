@@ -1,5 +1,5 @@
 [package]
-name = "PEGrs"
+name = "pegrs"
 version = "0.1.0"
 authors = ["thecreamedcorn <wgaboury@gmail.com>"]
 
