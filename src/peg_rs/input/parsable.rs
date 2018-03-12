@@ -21,8 +21,9 @@ impl<'a> Parsable<'a> {
     }
 
     pub fn next(&mut self) -> Option<char> {
+        let cur = self.peek();
         self.cur = self.loc.next();
-        self.peek()
+        cur
     }
 
     pub fn get_loc(&self) -> usize {
@@ -47,20 +48,15 @@ impl<'a> Parsable<'a> {
     }
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
 
-    #[test]
-    fn test_parsable() {
-        let mut input = Parsable::new("test");
-        let loc = input.get_loc();
-        assert_eq!(input.peek().unwrap(), 't');
-        input.next();
-        assert_eq!(input.next().unwrap(), 's');
-        input.goto_loc(loc);
-        assert_eq!(input.next().unwrap(), 'e');
-        input.goto_loc(loc);
-        assert_eq!(input.sub(0, 4), "test");
-    }
+#[test]
+fn test_parsable() {
+    let mut input = Parsable::new("test");
+    let loc = input.get_loc();
+    assert_eq!(input.peek().unwrap(), 't');
+    input.next();
+    assert_eq!(input.next().unwrap(), 'e');
+    input.goto_loc(loc);
+    assert_eq!(input.next().unwrap(), 't');
+    assert_eq!(input.sub(0, 4), "test");
 }
