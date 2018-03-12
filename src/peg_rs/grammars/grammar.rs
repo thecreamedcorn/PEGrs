@@ -1,9 +1,8 @@
-use std::boxed::Box;
+use std::rc::Rc;
 use peg_rs::grammars::grammar_node::*;
-use peg_rs::grammars::matches::match_node::MatchNode;
 
 pub struct Grammar {
-    pub root: Box<GrammarNode>
+    pub root: Rc<GrammarNode>
 }
 
 impl Grammar {

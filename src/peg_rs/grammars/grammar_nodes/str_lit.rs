@@ -1,4 +1,5 @@
 use peg_rs::grammars::grammar_node::*;
+use peg_rs::grammars::buildable::*;
 
 pub struct StrLitNode {
     pub string: String
@@ -35,6 +36,12 @@ impl GrammarNode for StrLitNode {
                 Option::None => return ParseResult::new_empty()
             }
         }
+    }
+}
+
+impl Buildable for StrLit {
+    fn build(&self, map: &mut HashMap<String, Rc<GrammarNode>>, prods: &HashMap<String, Production>) -> Result<Rc<GrammarNode>, String> {
+        Result::Ok(Rc::new(StrLitNode{ string: self.string.clone() }))
     }
 }
 

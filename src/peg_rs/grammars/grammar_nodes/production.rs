@@ -1,4 +1,5 @@
 use std::boxed::Box;
+use std::result::Result;
 use peg_rs::grammars::grammar_node::*;
 use peg_rs::grammars::buildable::Buildable;
 
@@ -34,17 +35,41 @@ impl GrammarNode for ProductionNode {
 }
 
 impl Production {
-    fn build(&self, map: &mut HashMap<String, Rc<GrammarNode>>) -> Rc<GrammarNode> {
+    pub fn build(&self, map: &mut HashMap<String, Rc<GrammarNode>>, prods: &HashMap<String, Production>) -> Result<Rc<GrammarNode>, String> {
+        match self.child.build(map, prods) {
+            Result::Ok(child) => Result::Ok(
+                Rc::new(
+                    ProductionNode {
+                        name: self.name.clone(),
+                        child,
+                    }
+                )
+            ),
+            err => err,
+        }
 
     }
 }
 
 impl Buildable for ProductionRef {
-    fn build(&self, map: &mut HashMap<String, Rc<GrammarNode>>, prods: &HashMap<String, Production>) -> Rc<GrammarNode> {
-        if prods.contains_key(self.name) {
-            prods.get(self.name).unwrap()
+    fn build(&self, map: &mut HashMap<String, Rc<GrammarNode>>, prods: &HashMap<String, Production>) -> Result<Rc<GrammarNode>, String> {
+        if map.contains_key(&self.name) {
+            Result::Ok(map.get(&self.name).unwrap().clone())
         } else {
-            let node = self.
+            match prods.get(&self.name) {
+                Option::Some(prod) => {
+                    match prod.build(map, prods) {
+                        Result::Ok(node) => {
+                            map.insert(self.name.clone(), node.clone());
+                            Result::Ok(node)
+                        },
+                        Result::Err(err) => Result::Err(err),
+                    }
+                },
+                Option::None => {
+                    Result::Err(format!("could not find production named '{}'", self.name))
+                },
+            }
         }
     }
 }
