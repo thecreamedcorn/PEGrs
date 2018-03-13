@@ -87,3 +87,31 @@ impl Buildable for ProductionRef {
         }
     }
 }
+
+#[test]
+fn test_production() {
+    use peg_rs::grammars::grammar_nodes::production::*;
+    use peg_rs::grammars::grammar_nodes::*;
+
+    let grammar = GrammarBuilder::new()
+        .add_prod(Production::new("Prod1",
+            Box::new(Union::new(vec!(
+                Box::new(StrLit::new("test")),
+                Box::new(Choice::new(vec!(
+                    Box::new(StrLit::new("cool")),
+                    Box::new(StrLit::new("notcool")),
+                ))),
+                Box::new(ProductionRef::new("Prod2"))
+            )))
+        ))
+        .add_prod(Production::new("Prod2",
+            Box::new(StrLit::new("yeet"))
+        ))
+        .build().unwrap();
+
+    assert!(!grammar.parse("test"));
+    assert!(!grammar.parse("te"));
+    assert!(grammar.parse("testcoolyeet"));
+    assert!(grammar.parse("testnotcoolyeet"));
+    assert!(!grammar.parse("testcoolyett"));
+}

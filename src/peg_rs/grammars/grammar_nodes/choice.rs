@@ -51,13 +51,14 @@ fn test_choice() {
 
     let grammar = GrammarBuilder::new()
         .add_prod(Production::new("TestStrLit",
-              Box::new(StrLit::new("test"))
-            )
-        )
+            Box::new(Choice::new(vec!(
+                Box::new(StrLit::new("test")),
+                Box::new(StrLit::new("cool")),
+            )))
+        ))
         .build().unwrap();
 
     assert!(grammar.parse("test"));
-    assert!(!grammar.parse("te"));
-    assert!(!grammar.parse("tess"));
-    assert!(grammar.parse("testing"));
+    assert!(grammar.parse("cool"));
+    assert!(!grammar.parse("bad"));
 }

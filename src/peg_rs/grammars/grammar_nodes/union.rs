@@ -57,18 +57,17 @@ impl Buildable for Union {
 }
 
 #[test]
-fn test_str_lit() {
+fn test_union() {
     use peg_rs::grammars::grammar_nodes::*;
     use peg_rs::grammars::grammar_builder::GrammarBuilder;
 
     let grammar = GrammarBuilder::new()
         .add_prod(Production::new("TestStrLit",
-                Box::new(Union::new(vec!(
-                    Box::new(StrLit::new("test")),
-                    Box::new(StrLit::new("cool")),
-                )))
-            )
-        )
+            Box::new(Union::new(vec!(
+                Box::new(StrLit::new("test")),
+                Box::new(StrLit::new("cool")),
+            )))
+        ))
         .build().unwrap();
 
     assert!(grammar.parse("testcool"));

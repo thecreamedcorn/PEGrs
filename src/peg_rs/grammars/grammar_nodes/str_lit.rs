@@ -58,9 +58,8 @@ fn test_str_lit() {
 
     let grammar = GrammarBuilder::new()
         .add_prod(Production::new("TestStrLit",
-                Box::new(StrLit::new("test"))
-            )
-        )
+            Box::new(StrLit::new("test"))
+        ))
         .build().unwrap();
 
     assert!(grammar.parse("test"));
