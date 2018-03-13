@@ -17,7 +17,6 @@ pub enum ParseResult<'a> {
     FAILURE,
 }
 
-
 impl<'a> ParseResult<'a> {
     pub fn new_empty() -> ParseResult<'a> {
         ParseResult::SUCCESS(
@@ -28,4 +27,3 @@ impl<'a> ParseResult<'a> {
         )
     }
 }
-

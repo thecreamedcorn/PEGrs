@@ -35,6 +35,13 @@ impl GrammarNode for ProductionNode {
 }
 
 impl Production {
+    pub fn new(name: &str, child: Box<Buildable>) -> Production {
+        Production {
+            name: name.to_string(),
+            child,
+        }
+    }
+
     pub fn build(&self, map: &mut HashMap<String, Rc<GrammarNode>>, prods: &HashMap<String, Production>) -> Result<Rc<GrammarNode>, String> {
         match self.child.build(map, prods) {
             Result::Ok(child) => Result::Ok(
@@ -51,7 +58,14 @@ impl Production {
     }
 }
 
+impl ProductionRef {
+    pub fn new(string: &str) -> ProductionRef {
+        ProductionRef{ name: string.to_string() }
+    }
+}
+
 impl Buildable for ProductionRef {
+
     fn build(&self, map: &mut HashMap<String, Rc<GrammarNode>>, prods: &HashMap<String, Production>) -> Result<Rc<GrammarNode>, String> {
         if map.contains_key(&self.name) {
             Result::Ok(map.get(&self.name).unwrap().clone())

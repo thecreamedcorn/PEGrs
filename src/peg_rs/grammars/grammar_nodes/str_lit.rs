@@ -39,36 +39,32 @@ impl GrammarNode for StrLitNode {
     }
 }
 
+impl StrLit {
+    pub fn new(string: &str) -> StrLit {
+        StrLit { string: string.to_string() }
+    }
+}
+
 impl Buildable for StrLit {
-    fn build(&self, map: &mut HashMap<String, Rc<GrammarNode>>, prods: &HashMap<String, Production>) -> Result<Rc<GrammarNode>, String> {
+    fn build(&self, _map: &mut HashMap<String, Rc<GrammarNode>>, _prods: &HashMap<String, Production>) -> Result<Rc<GrammarNode>, String> {
         Result::Ok(Rc::new(StrLitNode{ string: self.string.clone() }))
     }
 }
 
 #[test]
 fn test_str_lit() {
-    let lit = StrLitNode{ string: "test".to_string() };
-    let res = lit.run(&mut Parsable::new("test"));
-    match res {
-        ParseResult::FAILURE => panic!(),
-        _ => ()
-    }
+    use peg_rs::grammars::grammar_nodes::*;
+    use peg_rs::grammars::grammar_builder::GrammarBuilder;
 
-    let res = lit.run(&mut Parsable::new("testing"));
-    match res {
-        ParseResult::FAILURE => panic!(),
-        _ => ()
-    }
+    let grammar = GrammarBuilder::new()
+        .add_prod(Production::new("TestStrLit",
+                Box::new(StrLit::new("test"))
+            )
+        )
+        .build().unwrap();
 
-    let res = lit.run(&mut Parsable::new("not"));
-    match res {
-        ParseResult::SUCCESS(_) => panic!(),
-        _ => ()
-    }
-
-    let res = lit.run(&mut Parsable::new("te"));
-    match res {
-        ParseResult::SUCCESS(_) => panic!(),
-        _ => ()
-    }
+    assert!(grammar.parse("test"));
+    assert!(!grammar.parse("te"));
+    assert!(!grammar.parse("tess"));
+    assert!(grammar.parse("testing"));
 }
