@@ -1,8 +1,9 @@
 use peg_rs::grammars::buildable::*;
 use peg_rs::grammars::grammar_node::*;
+use peg_rs::grammars::grammar_nodes::production::ProductionNode;
 
 pub struct ChoiceNode {
-    pub choices: Vec<Rc<GrammarNode>>,
+    pub choices: Vec<Box<GrammarNode>>,
 }
 
 pub struct Choice {
@@ -17,8 +18,8 @@ impl Choice {
 
 impl GrammarNode for ChoiceNode {
     fn run<'a>(&self, input: &mut Parsable<'a>) -> ParseResult<'a> {
-        for rc in &self.choices {
-            match rc.run(input) {
+        for boxed in &self.choices {
+            match boxed.run(input) {
                 ParseResult::SUCCESS(mut parse_data) => return ParseResult::SUCCESS(parse_data),
                 _ => ()
             }
@@ -28,7 +29,7 @@ impl GrammarNode for ChoiceNode {
 }
 
 impl Buildable for Choice {
-    fn build(&self, map: &mut HashMap<String, Rc<GrammarNode>>, prods: &HashMap<String, Production>) -> Result<Rc<GrammarNode>, String> {
+    fn build(&self, map: &mut HashMap<String, Rc<RefCell<ProductionNode>>>, prods: &HashMap<String, Production>) -> Result<Box<GrammarNode>, String> {
         let mut ch = ChoiceNode {
             choices: Vec::new(),
         };
@@ -40,7 +41,7 @@ impl Buildable for Choice {
                 Result::Err(err) => return Result::Err(err),
             }
         }
-        Result::Ok(Rc::new(ch))
+        Result::Ok(Box::new(ch))
     }
 }
 

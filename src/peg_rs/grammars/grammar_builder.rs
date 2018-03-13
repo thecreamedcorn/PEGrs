@@ -1,6 +1,8 @@
 use std::collections::HashMap;
-use std::boxed::Box;
+use std::rc::Rc;
+use std::cell::RefCell;
 use peg_rs::grammars::grammar_nodes::*;
+use peg_rs::grammars::grammar_nodes::production::ProductionNode;
 use peg_rs::grammars::grammar::Grammar;
 
 pub struct GrammarBuilder {
@@ -25,9 +27,10 @@ impl GrammarBuilder {
     }
 
     pub fn build(self) -> Result<Grammar, String> {
-        match self.productions.get(&self.root_prod).unwrap().build(&mut HashMap::new(), &self.productions) {
+        let mut productions : HashMap<String, Rc<RefCell<ProductionNode>>> = HashMap::new();
+        match self.productions.get(&self.root_prod).unwrap().build(&mut productions, &self.productions) {
             Result::Ok(root) => Result::Ok(
-                Grammar { root }
+                Grammar { root: root.clone() }
             ),
             Result::Err(err) => Result::Err(err),
         }

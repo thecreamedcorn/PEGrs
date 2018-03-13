@@ -1,9 +1,10 @@
 use peg_rs::grammars::buildable::*;
 use peg_rs::grammars::grammar_node::*;
+use peg_rs::grammars::grammar_nodes::production::ProductionNode;
 use peg_rs::grammars::matches::match_collector::*;
 
 pub struct UnionNode {
-    pub seq: Vec<Rc<GrammarNode>>,
+    pub seq: Vec<Box<GrammarNode>>,
 }
 
 pub struct Union {
@@ -40,7 +41,7 @@ impl GrammarNode for UnionNode {
 }
 
 impl Buildable for Union {
-    fn build(&self, map: &mut HashMap<String, Rc<GrammarNode>>, prods: &HashMap<String, Production>) -> Result<Rc<GrammarNode>, String> {
+    fn build(&self, map: &mut HashMap<String, Rc<RefCell<ProductionNode>>>, prods: &HashMap<String, Production>) -> Result<Box<GrammarNode>, String> {
         let mut un = UnionNode {
             seq: Vec::new(),
         };
@@ -52,7 +53,7 @@ impl Buildable for Union {
                 Result::Err(err) => return Result::Err(err),
             }
         }
-        Result::Ok(Rc::new(un))
+        Result::Ok(Box::new(un))
     }
 }
 

@@ -1,2 +1,2 @@
-pub mod grammars;
+mod grammars;
 pub mod input;

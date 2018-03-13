@@ -1,4 +1,5 @@
 use peg_rs::grammars::grammar_node::*;
+use peg_rs::grammars::grammar_nodes::production::ProductionNode;
 use peg_rs::grammars::buildable::*;
 
 pub struct StrLitNode {
@@ -46,8 +47,8 @@ impl StrLit {
 }
 
 impl Buildable for StrLit {
-    fn build(&self, _map: &mut HashMap<String, Rc<GrammarNode>>, _prods: &HashMap<String, Production>) -> Result<Rc<GrammarNode>, String> {
-        Result::Ok(Rc::new(StrLitNode{ string: self.string.clone() }))
+    fn build(&self, _map: &mut HashMap<String, Rc<RefCell<ProductionNode>>>, _prods: &HashMap<String, Production>) -> Result<Box<GrammarNode>, String> {
+        Result::Ok(Box::new(StrLitNode{ string: self.string.clone() }))
     }
 }
 
