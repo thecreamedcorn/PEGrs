@@ -38,8 +38,11 @@ impl<'a> Parsable<'a> {
             self.loc = self.string.char_indices();
             self.cur = Option::None
         } else {
-            self.loc = self.string[loc..].char_indices();
-            self.cur = self.loc.next()
+            self.loc = self.string.char_indices();
+            self.cur = self.loc.next();
+            while self.get_loc() != loc {
+                self.cur = self.loc.next();
+            }
         }
     }
 

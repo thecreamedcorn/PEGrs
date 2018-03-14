@@ -11,7 +11,7 @@ pub struct Grammar {
 
 impl Grammar {
     pub fn parse<'a>(&self, string: &'a str ) -> bool {
-        let result = self.root.deref().borrow_mut().run(&mut Parsable::new(string));
+        let result = self.root.deref().borrow().run(&mut Parsable::new(string));
         match result {
             ParseResult::SUCCESS(parse_data) => {
                 for (mut func, match_node) in parse_data.call_list {

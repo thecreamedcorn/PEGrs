@@ -21,7 +21,7 @@ impl GrammarNode for ChoiceNode {
         for boxed in &self.choices {
             match boxed.run(input) {
                 ParseResult::SUCCESS(mut parse_data) => return ParseResult::SUCCESS(parse_data),
-                _ => ()
+                ParseResult::FAILURE => ()
             }
         }
         ParseResult::FAILURE

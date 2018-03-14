@@ -25,8 +25,8 @@ impl GrammarNode for ProductionNode {
                         call_list: parse_data.call_list
                     }
                 )
-            }
-            ParseResult::FAILURE => ParseResult::FAILURE
+            },
+            ParseResult::FAILURE => ParseResult::FAILURE,
         }
     }
 }
@@ -72,7 +72,7 @@ fn test_production() {
     Prod2 <- Prod1 'yeet'
     */
 
-    let _grammar = GrammarBuilder::new()
+    let grammar = GrammarBuilder::new()
         .add_prod(Production::new("Prod1",
             Box::new(Union::new(vec!(
                 Box::new(StrLit::new("test")),
@@ -90,9 +90,8 @@ fn test_production() {
         ))
         .build().unwrap();
 
-    assert!(true);
-    //assert!(!grammar.parse("test"));
-    //assert!(grammar.parse("testtestcoolyeet"));
-    //assert!(grammar.parse("testtesttestcoolyeetyeet"));
-    //assert!(!grammar.parse("testcoolyeet"));
+    assert!(!grammar.parse("test"));
+    assert!(grammar.parse("testtestcoolyeet"));
+    assert!(!grammar.parse("testtesttesttest"));
+    assert!(grammar.parse("testcoolyeet"));
 }
