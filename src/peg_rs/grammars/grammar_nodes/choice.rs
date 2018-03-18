@@ -17,14 +17,14 @@ impl Choice {
 }
 
 impl GrammarNode for ChoiceNode {
-    fn run<'a>(&self, input: &mut Parsable<'a>) -> ParseResult<'a> {
+    fn run(&self, input: &mut Parsable) -> ParseResult {
         for boxed in &self.choices {
             match boxed.run(input) {
-                ParseResult::SUCCESS(mut parse_data) => return ParseResult::SUCCESS(parse_data),
-                ParseResult::FAILURE => ()
+                ParseResult::Success(mut parse_data) => return ParseResult::Success(parse_data),
+                ParseResult::Failure => ()
             }
         }
-        ParseResult::FAILURE
+        ParseResult::Failure
     }
 }
 
@@ -50,8 +50,8 @@ fn test_choice() {
     use peg_rs::grammars::grammar_nodes::*;
     use peg_rs::grammars::grammar_builder::GrammarBuilder;
 
-    let grammar = GrammarBuilder::new()
-        .add_prod(Production::new("TestStrLit",
+    let grammar = GrammarBuilder::new(
+        Production::new("TestStrLit",
             Box::new(Choice::new(vec!(
                 Box::new(StrLit::new("test")),
                 Box::new(StrLit::new("cool")),

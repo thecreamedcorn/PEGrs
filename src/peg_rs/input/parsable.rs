@@ -1,53 +1,63 @@
-use std::str::CharIndices;
+use std::ops::Deref;
+use std::rc::Rc;
 
-pub struct Parsable<'a> {
-    string: &'a str,
-    loc: CharIndices<'a>,
-    cur: Option<(usize, char)>
+pub struct Parsable {
+    content: Rc<Vec<char>>,
+    cur: usize,
 }
 
-impl<'a> Parsable<'a> {
-    pub fn new(string: &'a str) -> Parsable {
-        let mut loc = string.char_indices();
-        let cur = loc.next();
-        Parsable { string, loc, cur }
+pub struct ContentRef {
+    content: Rc<Vec<char>>,
+    start: usize,
+    end: usize,
+}
+
+impl Parsable {
+    pub fn new(string: &str) -> Parsable {
+        Parsable {
+            content: Rc::new(string.chars().collect()),
+            cur: 0,
+        }
     }
 
     pub fn peek(&self) -> Option<char> {
-        match self.cur {
-            Option::Some((_, c)) => Option::Some(c),
-            Option::None => Option::None
+        if self.cur < self.content.len() {
+            Option::Some(self.content[self.cur])
+        } else {
+            Option::None
         }
     }
 
     pub fn next(&mut self) -> Option<char> {
         let cur = self.peek();
-        self.cur = self.loc.next();
+        if cur != Option::None {
+            self.cur += 1
+        }
         cur
     }
 
     pub fn get_loc(&self) -> usize {
-        match self.cur {
-            Option::Some((s, _)) => s,
-            Option::None => self.string.len()
-        }
+        self.cur
     }
 
     pub fn goto_loc(&mut self, loc: usize) {
-        if loc >= self.string.len() {
-            self.loc = self.string.char_indices();
-            self.cur = Option::None
-        } else {
-            self.loc = self.string.char_indices();
-            self.cur = self.loc.next();
-            while self.get_loc() != loc {
-                self.cur = self.loc.next();
-            }
+        if loc < self.content.len() {
+            self.cur = loc;
         }
     }
 
-    pub fn sub(&self, loc1: usize, loc2: usize) -> &str {
-        &self.string[loc1..loc2]
+    pub fn sub_string(&self, start: usize, end: usize) -> ContentRef {
+        ContentRef {
+            content: self.content.clone(),
+            start,
+            end,
+        }
+    }
+}
+
+impl ContentRef {
+    pub fn to_string(&self) -> String {
+        self.content.deref()[self.start..self.end].iter().collect()
     }
 }
 
@@ -61,5 +71,5 @@ fn test_parsable() {
     assert_eq!(input.next().unwrap(), 'e');
     input.goto_loc(loc);
     assert_eq!(input.next().unwrap(), 't');
-    assert_eq!(input.sub(0, 4), "test");
+    assert_eq!(input.sub_string(0, 4).to_string(), "test".to_string());
 }

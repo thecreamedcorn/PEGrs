@@ -10,16 +10,16 @@ pub struct Grammar {
 }
 
 impl Grammar {
-    pub fn parse<'a>(&self, string: &'a str ) -> bool {
+    pub fn parse(&self, string: &str ) -> bool {
         let result = self.root.deref().borrow().run(&mut Parsable::new(string));
         match result {
-            ParseResult::SUCCESS(parse_data) => {
-                for (mut func, match_node) in parse_data.call_list {
-                    func(&match_node)
+            ParseResult::Success(parse_data) => {
+                for (func, match_node) in parse_data.call_list {
+                    func.deref()(match_node.deref())
                 }
                 true
             }
-            ParseResult::FAILURE => false
+            ParseResult::Failure => false
         }
     }
 }

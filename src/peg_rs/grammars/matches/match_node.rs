@@ -1,7 +1,8 @@
 use std::collections::HashMap;
 use std::rc::Rc;
+use peg_rs::input::parsable::ContentRef;
 
-pub struct MatchNode<'a> {
-    pub slice: &'a str,
-    pub children: HashMap<String, Vec<Rc<MatchNode<'a>>>>
+pub struct CaptureTree {
+    pub content: ContentRef,
+    pub children: HashMap<String, Vec<Rc<CaptureTree>>>,
 }

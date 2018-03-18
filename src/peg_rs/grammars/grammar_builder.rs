@@ -11,17 +11,17 @@ pub struct GrammarBuilder {
 }
 
 impl GrammarBuilder {
-    pub fn new() -> GrammarBuilder {
-        GrammarBuilder {
+    pub fn new(prod: Production) -> GrammarBuilder {
+        let mut result = GrammarBuilder {
             root_prod: "".to_string(),
             productions: HashMap::new()
-        }
+        };
+        result.root_prod = prod.name.clone();
+        result.productions.insert(prod.name.clone(), prod);
+        result
     }
 
-    pub fn add_prod(mut self, prod: Production) -> GrammarBuilder{
-        if self.productions.is_empty() {
-            self.root_prod = prod.name.clone()
-        }
+    pub fn add_prod(mut self, prod: Production) -> GrammarBuilder {
         self.productions.insert(prod.name.clone(), prod);
         self
     }

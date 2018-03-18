@@ -1,27 +1,27 @@
 pub use std::collections::HashMap;
 pub use std::rc::Rc;
-use peg_rs::grammars::matches::match_node::MatchNode;
+use peg_rs::grammars::matches::match_node::CaptureTree;
 
-pub struct ParseData<'a> {
-    pub match_data: MatchData<'a>,
-    pub call_list: Vec<(Box<FnMut(&MatchNode<'a>)>, Rc<MatchNode<'a>>)>,
+pub struct ParseData {
+    pub match_data: MatchData,
+    pub call_list: Vec<(Rc<Fn(&CaptureTree)>, Rc<CaptureTree>)>,
 }
 
-pub enum MatchData<'a> {
-    MATCH(String, MatchNode<'a>),
-    COLLECT(HashMap<String, Vec<Rc<MatchNode<'a>>>>),
+pub enum MatchData {
+    Match(String, CaptureTree),
+    Collect(HashMap<String, Vec<Rc<CaptureTree>>>),
 }
 
-pub enum ParseResult<'a> {
-    SUCCESS(ParseData<'a>),
-    FAILURE,
+pub enum ParseResult {
+    Success(ParseData),
+    Failure,
 }
 
-impl<'a> ParseResult<'a> {
-    pub fn new_empty() -> ParseResult<'a> {
-        ParseResult::SUCCESS(
+impl ParseResult {
+    pub fn new_empty() -> ParseResult {
+        ParseResult::Success(
             ParseData {
-                match_data: MatchData::COLLECT(HashMap::new()),
+                match_data: MatchData::Collect(HashMap::new()),
                 call_list: Vec::new(),
             }
         )

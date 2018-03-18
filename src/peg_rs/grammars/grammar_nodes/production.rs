@@ -16,17 +16,17 @@ pub struct Production {
 }
 
 impl GrammarNode for ProductionNode {
-    fn run<'a>(&self, input: &mut Parsable<'a>) -> ParseResult<'a> {
+    fn run(&self, input: &mut Parsable) -> ParseResult {
         match self.child.run(input) {
-            ParseResult::SUCCESS(parse_data) => {
-                ParseResult::SUCCESS(
+            ParseResult::Success(parse_data) => {
+                ParseResult::Success(
                     ParseData {
-                        match_data: MatchData::COLLECT(HashMap::new()),
+                        match_data: MatchData::Collect(HashMap::new()),
                         call_list: parse_data.call_list
                     }
                 )
-            },
-            ParseResult::FAILURE => ParseResult::FAILURE,
+            }
+            ParseResult::Failure => ParseResult::Failure,
         }
     }
 }
@@ -72,8 +72,8 @@ fn test_production() {
     Prod2 <- Prod1 'yeet'
     */
 
-    let grammar = GrammarBuilder::new()
-        .add_prod(Production::new("Prod1",
+    let grammar = GrammarBuilder::new(
+        Production::new("Prod1",
             Box::new(Union::new(vec!(
                 Box::new(StrLit::new("test")),
                 Box::new(Choice::new(vec!(

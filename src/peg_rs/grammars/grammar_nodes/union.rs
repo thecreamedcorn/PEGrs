@@ -18,22 +18,22 @@ impl Union {
 }
 
 impl GrammarNode for UnionNode {
-    fn run<'a>(&self, input: &mut Parsable<'a>) -> ParseResult<'a> {
+    fn run(&self, input: &mut Parsable) -> ParseResult {
         let mut match_data = MatchCollector::new();
         let mut call_list = Vec::new();
 
         for rc in &self.seq {
             match rc.run(input) {
-                ParseResult::SUCCESS(mut parse_data) => {
+                ParseResult::Success(mut parse_data) => {
                     match_data.add(parse_data.match_data);
                     call_list.append(&mut parse_data.call_list);
                 },
-                ParseResult::FAILURE => return ParseResult::FAILURE,
+                ParseResult::Failure => return ParseResult::Failure,
             }
         }
-        ParseResult::SUCCESS(
+        ParseResult::Success(
             ParseData {
-                match_data: MatchData::COLLECT(match_data.get_collection()),
+                match_data: MatchData::Collect(match_data.get_collection()),
                 call_list,
             }
         )
@@ -62,8 +62,8 @@ fn test_union() {
     use peg_rs::grammars::grammar_nodes::*;
     use peg_rs::grammars::grammar_builder::GrammarBuilder;
 
-    let grammar = GrammarBuilder::new()
-        .add_prod(Production::new("TestStrLit",
+    let grammar = GrammarBuilder::new(
+        Production::new("TestStrLit",
             Box::new(Union::new(vec!(
                 Box::new(StrLit::new("test")),
                 Box::new(StrLit::new("cool")),

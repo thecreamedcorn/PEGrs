@@ -7,12 +7,12 @@ pub struct StrLitNode {
 }
 
 pub struct StrLit {
-    pub string: String
+    string: String
 }
 
 impl GrammarNode for StrLitNode {
 
-    fn run<'a>(&self, input: &mut Parsable<'a>) -> ParseResult<'a> {
+    fn run(&self, input: &mut Parsable) -> ParseResult {
         let mut chars = self.string.chars();
         let begin = input.get_loc();
 
@@ -25,12 +25,12 @@ impl GrammarNode for StrLitNode {
                         Option::Some(in_char) => {
                             if in_char != str_char {
                                 input.goto_loc(begin);
-                                return ParseResult::FAILURE;
+                                return ParseResult::Failure;
                             }
                         },
                         Option::None => {
                             input.goto_loc(begin);
-                            return ParseResult::FAILURE;
+                            return ParseResult::Failure;
                         }
                     }
                 },
@@ -57,8 +57,8 @@ fn test_str_lit() {
     use peg_rs::grammars::grammar_nodes::*;
     use peg_rs::grammars::grammar_builder::GrammarBuilder;
 
-    let grammar = GrammarBuilder::new()
-        .add_prod(Production::new("TestStrLit",
+    let grammar = GrammarBuilder::new(
+        Production::new("TestStrLit",
             Box::new(StrLit::new("test"))
         ))
         .build().unwrap();

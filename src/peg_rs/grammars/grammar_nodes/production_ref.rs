@@ -15,7 +15,7 @@ pub struct ProductionRef {
 }
 
 impl GrammarNode for ProductionRefNode {
-    fn run<'a>(&self, input: &mut Parsable<'a>) -> ParseResult<'a> {
+    fn run(&self, input: &mut Parsable) -> ParseResult {
         self.prod.deref().borrow().run(input)
     }
 }
