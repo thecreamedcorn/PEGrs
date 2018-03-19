@@ -74,19 +74,19 @@ fn test_production() {
 
     let grammar = GrammarBuilder::new(
         Production::new("Prod1",
-            Box::new(Union::new(vec!(
-                Box::new(StrLit::new("test")),
-                Box::new(Choice::new(vec!(
-                    Box::new(StrLit::new("cool")),
-                    Box::new(ProductionRef::new("Prod2")),
-                ))),
-            )))
+            Union::new(vec!(
+                StrLit::new("test"),
+                Choice::new(vec!(
+                    StrLit::new("cool"),
+                    ProductionRef::new("Prod2"),
+                )),
+            ))
         ))
         .add_prod(Production::new("Prod2",
-            Box::new(Union::new(vec!(
-                Box::new(ProductionRef::new("Prod1")),
-                Box::new(StrLit::new("yeet")),
-            )))
+            Union::new(vec!(
+                ProductionRef::new("Prod1"),
+                StrLit::new("yeet"),
+            ))
         ))
         .build().unwrap();
 

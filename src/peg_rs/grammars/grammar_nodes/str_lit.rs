@@ -41,8 +41,8 @@ impl GrammarNode for StrLitNode {
 }
 
 impl StrLit {
-    pub fn new(string: &str) -> StrLit {
-        StrLit { string: string.to_string() }
+    pub fn new(string: &str) -> Box<StrLit> {
+        Box::new(StrLit { string: string.to_string() })
     }
 }
 
@@ -59,7 +59,7 @@ fn test_str_lit() {
 
     let grammar = GrammarBuilder::new(
         Production::new("TestStrLit",
-            Box::new(StrLit::new("test"))
+            StrLit::new("test")
         ))
         .build().unwrap();
 

@@ -11,8 +11,8 @@ pub struct Choice {
 }
 
 impl Choice {
-    pub fn new(choices: Vec<Box<Buildable>>) -> Choice {
-        Choice { choices }
+    pub fn new(choices: Vec<Box<Buildable>>) -> Box<Choice> {
+        Box::new(Choice { choices })
     }
 }
 
@@ -52,10 +52,10 @@ fn test_choice() {
 
     let grammar = GrammarBuilder::new(
         Production::new("TestStrLit",
-            Box::new(Choice::new(vec!(
-                Box::new(StrLit::new("test")),
-                Box::new(StrLit::new("cool")),
-            )))
+            Choice::new(vec!(
+                StrLit::new("test"),
+                StrLit::new("cool"),
+            ))
         ))
         .build().unwrap();
 

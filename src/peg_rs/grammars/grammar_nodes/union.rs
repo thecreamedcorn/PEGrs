@@ -12,8 +12,8 @@ pub struct Union {
 }
 
 impl Union {
-    pub fn new(seq: Vec<Box<Buildable>>) -> Union {
-        Union { seq }
+    pub fn new(seq: Vec<Box<Buildable>>) -> Box<Union> {
+        Box::new(Union { seq })
     }
 }
 
@@ -64,10 +64,10 @@ fn test_union() {
 
     let grammar = GrammarBuilder::new(
         Production::new("TestStrLit",
-            Box::new(Union::new(vec!(
-                Box::new(StrLit::new("test")),
-                Box::new(StrLit::new("cool")),
-            )))
+            Union::new(vec!(
+                StrLit::new("test"),
+                StrLit::new("cool"),
+            ))
         ))
         .build().unwrap();
 

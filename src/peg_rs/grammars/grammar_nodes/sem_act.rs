@@ -17,11 +17,11 @@ pub struct SemAct {
 }
 
 impl SemAct {
-    pub fn new(child: Box<Buildable>, func: Rc<Fn(&CaptureTree)>) -> SemAct {
-        SemAct {
+    pub fn new(child: Box<Buildable>, func: Rc<Fn(&CaptureTree)>) -> Box<SemAct> {
+        Box::new(SemAct {
             child,
             func: func.clone(),
-        }
+        })
     }
 }
 
@@ -95,15 +95,15 @@ fn test_semantic_actions() {
     let grammar = GrammarBuilder::new(
         Production::new(
             "Prod1",
-            Box::new(SemAct::new(
-                Box::new(StrLit::new("test")),
+            SemAct::new(
+                StrLit::new("test"),
                 Rc::new({
                     let num_copy = num.clone();
                     move |_ct: &CaptureTree| {
                         *(num_copy.borrow_mut()) = 10;
                     }
                 })
-            ))
+            )
         ))
         .build().unwrap();
 

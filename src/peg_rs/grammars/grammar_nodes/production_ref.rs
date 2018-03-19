@@ -21,8 +21,8 @@ impl GrammarNode for ProductionRefNode {
 }
 
 impl ProductionRef {
-    pub fn new(string: &str) -> ProductionRef {
-        ProductionRef{ name: string.to_string() }
+    pub fn new(string: &str) -> Box<ProductionRef> {
+        Box::new(ProductionRef{ name: string.to_string() })
     }
 }
 

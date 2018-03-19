@@ -53,11 +53,11 @@ impl GrammarNode for CaptureNode {
 }
 
 impl Capture {
-    fn new(name: &str, child: Box<Buildable>) -> Capture {
-        Capture {
+    fn new(name: &str, child: Box<Buildable>) -> Box<Capture> {
+        Box::new(Capture {
             name: name.to_string(),
             child,
-        }
+        })
     }
 }
 
@@ -86,11 +86,11 @@ fn test_capture() {
     let grammar = GrammarBuilder::new(
         Production::new(
             "Prod1",
-            Box::new(SemAct::new(
-                Box::new(Capture::new(
+            SemAct::new(
+                Capture::new(
                     "my_cap",
-                    Box::new(StrLit::new("test"))
-                )),
+                    StrLit::new("test")
+                ),
                 Rc::new({
                     let string_copy = string.clone();
                     move |ct: &CaptureTree| {
@@ -98,7 +98,7 @@ fn test_capture() {
                         *(string_copy.borrow_mut()) = ct.children.get("my_cap").unwrap()[0].content.to_string();
                     }
                 })
-            ))
+            )
         ))
         .build().unwrap();
 
