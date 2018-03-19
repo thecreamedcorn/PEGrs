@@ -1,6 +1,6 @@
 pub use std::collections::HashMap;
 pub use std::rc::Rc;
-use peg_rs::grammars::matches::match_node::CaptureTree;
+use peg_rs::grammars::matches::capture_tree::CaptureTree;
 
 pub struct ParseData {
     pub match_data: MatchData,

@@ -1,6 +1,6 @@
 pub use std::collections::HashMap;
 pub use std::rc::Rc;
-use peg_rs::grammars::matches::match_node::CaptureTree;
+use peg_rs::grammars::matches::capture_tree::CaptureTree;
 use peg_rs::grammars::parse_result::*;
 
 pub struct MatchCollector {

@@ -6,6 +6,7 @@ pub struct Parsable {
     cur: usize,
 }
 
+#[derive(Debug)]
 pub struct ContentRef {
     content: Rc<Vec<char>>,
     start: usize,

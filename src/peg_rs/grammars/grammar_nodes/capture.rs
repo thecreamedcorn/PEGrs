@@ -1,6 +1,7 @@
 use peg_rs::grammars::buildable::*;
 use peg_rs::grammars::grammar_node::*;
 use peg_rs::grammars::grammar_nodes::production::ProductionNode;
+use peg_rs::grammars::matches::capture_tree::CaptureTree;
 
 pub struct CaptureNode {
     pub name: String,
@@ -14,16 +15,33 @@ pub struct Capture {
 
 impl GrammarNode for CaptureNode {
     fn run(&self, input: &mut Parsable) -> ParseResult {
+        let begin = input.get_loc();
         match self.child.run(input) {
             ParseResult::Success(parse_data) => {
                 match parse_data.match_data {
                     MatchData::Match(string, node) => {
-                        let map = HashMap::new();
-                        map.insert(string, node)
+                        let mut map = HashMap::new();
+                        map.insert(string, vec!(Rc::new(node)));
+                        ParseResult::Success(ParseData {
+                            match_data: MatchData::Match(
+                                self.name.clone(),
+                                CaptureTree {
+                                    content: input.sub_string(begin, input.get_loc()),
+                                    children: map,
+                                }
+                            ),
+                            call_list: parse_data.call_list,
+                        })
                     },
                     MatchData::Collect(collection) => {
                         ParseResult::Success(ParseData {
-                            match_data: MatchData::Collect(collection),
+                            match_data: MatchData::Match(
+                                self.name.clone(),
+                                CaptureTree {
+                                    content: input.sub_string(begin, input.get_loc()),
+                                    children: collection,
+                                }
+                            ),
                             call_list: parse_data.call_list,
                         })
                     },
@@ -35,9 +53,9 @@ impl GrammarNode for CaptureNode {
 }
 
 impl Capture {
-    fn new(name: String, child: Box<Buildable>) -> Capture {
+    fn new(name: &str, child: Box<Buildable>) -> Capture {
         Capture {
-            name,
+            name: name.to_string(),
             child,
         }
     }
@@ -57,5 +75,33 @@ impl Buildable for Capture {
     }
 }
 
+#[test]
+fn test_capture() {
+    use peg_rs::grammars::grammar_nodes::production::*;
+    use peg_rs::grammars::grammar_nodes::*;
+    use peg_rs::grammars::grammar_builder::GrammarBuilder;
 
+    let string: Rc<RefCell<String>> = Rc::new(RefCell::new(String::new()));
 
+    let grammar = GrammarBuilder::new(
+        Production::new(
+            "Prod1",
+            Box::new(SemAct::new(
+                Box::new(Capture::new(
+                    "my_cap",
+                    Box::new(StrLit::new("test"))
+                )),
+                Rc::new({
+                    let string_copy = string.clone();
+                    move |ct: &CaptureTree| {
+                        println!("{:?}", ct);
+                        *(string_copy.borrow_mut()) = ct.children.get("my_cap").unwrap()[0].content.to_string();
+                    }
+                })
+            ))
+        ))
+        .build().unwrap();
+
+    grammar.parse("test");
+    assert_eq!(*string.borrow(), "test");
+}

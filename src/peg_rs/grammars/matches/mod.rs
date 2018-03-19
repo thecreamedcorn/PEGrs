@@ -1,2 +1,2 @@
-pub mod match_node;
+pub mod capture_tree;
 pub mod match_collector;

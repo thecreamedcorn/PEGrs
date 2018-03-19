@@ -2,7 +2,7 @@ use std::rc::Rc;
 use std::ops::Deref;
 
 use peg_rs::grammars::buildable::*;
-use peg_rs::grammars::matches::match_node::CaptureTree;
+use peg_rs::grammars::matches::capture_tree::CaptureTree;
 use peg_rs::grammars::grammar_node::*;
 use peg_rs::grammars::grammar_nodes::production::ProductionNode;
 
@@ -17,7 +17,7 @@ pub struct SemAct {
 }
 
 impl SemAct {
-    fn new(child: Box<Buildable>, func: Rc<Fn(&CaptureTree)>) -> SemAct {
+    pub fn new(child: Box<Buildable>, func: Rc<Fn(&CaptureTree)>) -> SemAct {
         SemAct {
             child,
             func: func.clone(),
@@ -47,12 +47,19 @@ impl GrammarNode for SemActNode {
                         })
                     },
                     MatchData::Match(string, node) => {
+                        println!("got here");
                         let match_ref = Rc::new(node);
-                        parse_data.call_list.push((self.func.clone(), match_ref.clone()));
-
                         let mut map = HashMap::new();
                         map.insert(string, vec!(match_ref.clone()));
-                        parse_data.match_data = MatchData::Collect(map);
+                        parse_data.match_data = MatchData::Collect(map.clone());
+
+                        parse_data.call_list.push((
+                            self.func.clone(),
+                            Rc::new(CaptureTree {
+                                content: input.sub_string(begin, input.get_loc()),
+                                children: map.clone(),
+                            })
+                        ));
 
                         ParseResult::Success(parse_data)
                     }
@@ -92,7 +99,7 @@ fn test_semantic_actions() {
                 Box::new(StrLit::new("test")),
                 Rc::new({
                     let num_copy = num.clone();
-                    move |_m: &CaptureTree| {
+                    move |_ct: &CaptureTree| {
                         *(num_copy.borrow_mut()) = 10;
                     }
                 })
