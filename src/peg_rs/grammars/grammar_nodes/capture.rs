@@ -53,7 +53,7 @@ impl GrammarNode for CaptureNode {
 }
 
 impl Capture {
-    fn new(name: &str, child: Box<Buildable>) -> Box<Capture> {
+    pub fn new(name: &str, child: Box<Buildable>) -> Box<Capture> {
         Box::new(Capture {
             name: name.to_string(),
             child,
@@ -94,7 +94,6 @@ fn test_capture() {
                 Rc::new({
                     let string_copy = string.clone();
                     move |ct: &CaptureTree| {
-                        println!("{:?}", ct);
                         *(string_copy.borrow_mut()) = ct.children.get("my_cap").unwrap()[0].content.to_string();
                     }
                 })

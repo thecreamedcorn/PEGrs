@@ -47,7 +47,6 @@ impl GrammarNode for SemActNode {
                         })
                     },
                     MatchData::Match(string, node) => {
-                        println!("got here");
                         let match_ref = Rc::new(node);
                         let mut map = HashMap::new();
                         map.insert(string, vec!(match_ref.clone()));

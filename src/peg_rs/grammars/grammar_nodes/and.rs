@@ -4,10 +4,10 @@ use peg_rs::grammars::buildable::*;
 use peg_rs::grammars::grammar_nodes::not::Not;
 
 
-struct And;
+pub struct And;
 
 impl And {
-    fn new(child: Box<Buildable>) -> Box<Buildable> {
+    pub fn new(child: Box<Buildable>) -> Box<Buildable> {
         Not::new(Not::new(child))
     }
 }
