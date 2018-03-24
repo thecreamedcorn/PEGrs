@@ -1,10 +1,9 @@
 use std::rc::Rc;
 use std::ops::Deref;
 
-use peg_rs::grammars::buildable::*;
-use peg_rs::grammars::matches::capture_tree::CaptureTree;
-use peg_rs::grammars::grammar_node::*;
-use peg_rs::grammars::grammar_nodes::production::ProductionNode;
+use peg_rs::interfaces::*;
+use peg_rs::grammar_nodes::production::ProductionNode;
+use peg_rs::utils::capture_tree::CaptureTree;
 
 pub struct SemActNode {
     pub child: Box<GrammarNode>,
@@ -86,8 +85,7 @@ impl Buildable for SemAct {
 #[test]
 fn test_semantic_actions() {
     use std::cell::RefCell;
-    use peg_rs::grammars::grammar_nodes::*;
-    use peg_rs::grammars::grammar_builder::GrammarBuilder;
+    use ::*;
 
     let num: Rc<RefCell<i64>> = Rc::new(RefCell::new(5));
 

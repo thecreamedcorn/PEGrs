@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/pegrs.iml" filepath="$PROJECT_DIR$/pegrs.iml" />
+      <module fileurl="file://$PROJECT_DIR$/peg_rs.iml" filepath="$PROJECT_DIR$/peg_rs.iml" />
     </modules>
   </component>
 </project>

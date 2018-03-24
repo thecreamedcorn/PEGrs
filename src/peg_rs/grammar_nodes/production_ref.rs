@@ -2,9 +2,8 @@ use std::boxed::Box;
 use std::result::Result;
 use std::ops::Deref;
 
-use peg_rs::grammars::grammar_node::*;
-use peg_rs::grammars::grammar_nodes::production::*;
-use peg_rs::grammars::buildable::*;
+use peg_rs::interfaces::*;
+use peg_rs::grammar_nodes::production::*;
 
 pub struct ProductionRefNode {
     pub prod: Rc<RefCell<ProductionNode>>,

@@ -1,4 +1,4 @@
-use peg_rs::grammars::grammar_node::*;
+use peg_rs::interfaces::grammar_node::*;
 
 pub struct EmptyNode;
 

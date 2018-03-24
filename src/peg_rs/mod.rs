@@ -1,14 +1,13 @@
-mod grammars;
-pub mod input;
+pub mod grammar_nodes;
+pub mod utils;
+mod interfaces;
 
 #[test]
 fn calculator_test() {
     use std::cell::RefCell;
     use std::rc::Rc;
-    //use std::str::StrExt::parse;
-    use peg_rs::grammars::grammar_nodes::*;
-    use peg_rs::grammars::grammar_builder::GrammarBuilder;
-    use peg_rs::grammars::matches::capture_tree::CaptureTree;
+
+    use ::*;
 
     let stack_orig: Rc<RefCell<Vec<f64>>> = Rc::new(RefCell::new(Vec::new()));
 

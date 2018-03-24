@@ -1,7 +1,6 @@
-use peg_rs::grammars::buildable::*;
-use peg_rs::grammars::grammar_node::*;
-use peg_rs::grammars::grammar_nodes::production::ProductionNode;
-use peg_rs::grammars::matches::match_collector::*;
+use peg_rs::interfaces::*;
+use peg_rs::grammar_nodes::production::ProductionNode;
+use peg_rs::utils::match_collector::MatchCollector;
 
 pub struct UnionNode {
     pub seq: Vec<Box<GrammarNode>>,
@@ -59,8 +58,7 @@ impl Buildable for Union {
 
 #[test]
 fn test_union() {
-    use peg_rs::grammars::grammar_nodes::*;
-    use peg_rs::grammars::grammar_builder::GrammarBuilder;
+    use ::*;
 
     let grammar = GrammarBuilder::new(
         Production::new("TestStrLit",

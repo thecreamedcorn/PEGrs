@@ -1,8 +1,5 @@
-use peg_rs::grammars::buildable::*;
-use peg_rs::grammars::matches::capture_tree::CaptureTree;
-use peg_rs::grammars::grammar_node::*;
-use peg_rs::grammars::grammar_nodes::production::ProductionNode;
-
+use peg_rs::interfaces::*;
+use peg_rs::grammar_nodes::production::ProductionNode;
 type CharTester = Fn(char) -> bool;
 
 pub struct CharClassNode {
@@ -37,7 +34,7 @@ impl GrammarNode for CharClassNode {
 }
 
 impl Buildable for CharClass {
-    fn build(&self, map: &mut HashMap<String, Rc<RefCell<ProductionNode>>>, prods: &HashMap<String, Production>) -> Result<Box<GrammarNode>, String> {
+    fn build(&self, _map: &mut HashMap<String, Rc<RefCell<ProductionNode>>>, _prods: &HashMap<String, Production>) -> Result<Box<GrammarNode>, String> {
         Result::Ok(Box::new(CharClassNode{char_testers: parse_string(&self.string)}))
     }
 }
@@ -61,7 +58,7 @@ fn parse_string(string: &str) -> Vec<Box<CharTester>> {
     let mut result: Vec<Box<CharTester>> = Vec::new();
 
     while loc < chars.len() {
-        let left = chars.len() - loc;
+        let _left = chars.len() - loc;
 
         match parse_char(&chars, loc) {
             Option::Some((c1, len)) => {
@@ -117,8 +114,7 @@ fn create_range_char_match(start: char, end: char) -> Box<CharTester> {
 
 #[test]
 fn test_char_class() {
-    use peg_rs::grammars::grammar_nodes::*;
-    use peg_rs::grammars::grammar_builder::GrammarBuilder;
+    use ::*;
 
     let num: Rc<RefCell<i64>> = Rc::new(RefCell::new(5));
 

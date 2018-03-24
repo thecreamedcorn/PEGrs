@@ -2,8 +2,8 @@ use std::rc::Rc;
 use std::cell::RefCell;
 use std::ops::Deref;
 
-use peg_rs::grammars::grammar_node::*;
-use peg_rs::grammars::grammar_nodes::production::ProductionNode;
+use peg_rs::interfaces::grammar_node::*;
+use peg_rs::grammar_nodes::production::ProductionNode;
 
 pub struct Grammar {
     pub root: Rc<RefCell<ProductionNode>>,

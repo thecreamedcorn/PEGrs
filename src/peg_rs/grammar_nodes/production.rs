@@ -2,9 +2,8 @@ use std::boxed::Box;
 use std::result::Result;
 use std::ops::Deref;
 
-use peg_rs::grammars::grammar_node::*;
-use peg_rs::grammars::buildable::*;
-use peg_rs::grammars::grammar_nodes::empty::EmptyNode;
+use peg_rs::interfaces::*;
+use peg_rs::grammar_nodes::empty::EmptyNode;
 
 pub struct ProductionNode {
     pub child: Box<GrammarNode>
@@ -62,9 +61,7 @@ impl Production {
 
 #[test]
 fn test_production() {
-    use peg_rs::grammars::grammar_nodes::production::*;
-    use peg_rs::grammars::grammar_nodes::*;
-    use peg_rs::grammars::grammar_builder::GrammarBuilder;
+    use ::*;
 
     /*
     //Outline of this grammar

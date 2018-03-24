@@ -1,8 +1,5 @@
-use peg_rs::grammars::grammar_node::*;
-use peg_rs::grammars::grammar_nodes::production::ProductionNode;
-use peg_rs::grammars::buildable::*;
-use peg_rs::grammars::grammar_nodes::not::Not;
-
+use peg_rs::grammar_nodes::not::Not;
+use peg_rs::interfaces::buildable::Buildable;
 
 pub struct And;
 
@@ -14,8 +11,7 @@ impl And {
 
 #[test]
 fn test_and() {
-    use peg_rs::grammars::grammar_nodes::*;
-    use peg_rs::grammars::grammar_builder::GrammarBuilder;
+    use ::*;
 
     let grammar = GrammarBuilder::new(
         Production::new(

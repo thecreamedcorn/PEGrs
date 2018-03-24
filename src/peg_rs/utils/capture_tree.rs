@@ -1,6 +1,7 @@
 use std::collections::HashMap;
 use std::rc::Rc;
-use peg_rs::input::parsable::ContentRef;
+
+use peg_rs::utils::parsable::ContentRef;
 
 #[derive(Debug)]
 pub struct CaptureTree {

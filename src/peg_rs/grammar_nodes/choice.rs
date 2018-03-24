@@ -1,6 +1,5 @@
-use peg_rs::grammars::buildable::*;
-use peg_rs::grammars::grammar_node::*;
-use peg_rs::grammars::grammar_nodes::production::ProductionNode;
+use peg_rs::interfaces::*;
+use peg_rs::grammar_nodes::production::ProductionNode;
 
 pub struct ChoiceNode {
     pub choices: Vec<Box<GrammarNode>>,
@@ -47,8 +46,7 @@ impl Buildable for Choice {
 
 #[test]
 fn test_choice() {
-    use peg_rs::grammars::grammar_nodes::*;
-    use peg_rs::grammars::grammar_builder::GrammarBuilder;
+    use ::*;
 
     let grammar = GrammarBuilder::new(
         Production::new("TestStrLit",

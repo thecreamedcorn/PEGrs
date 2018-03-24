@@ -1,7 +1,5 @@
-use peg_rs::grammars::buildable::*;
-use peg_rs::grammars::grammar_node::*;
-use peg_rs::grammars::grammar_nodes::production::ProductionNode;
-use peg_rs::grammars::matches::match_collector::*;
+use peg_rs::interfaces::*;
+use peg_rs::grammar_nodes::production::*;
 
 pub struct ZeroOrOneNode {
     pub child: Box<GrammarNode>,
@@ -41,8 +39,7 @@ impl Buildable for ZeroOrOne {
 
 #[test]
 fn test_zero_or_one() {
-    use peg_rs::grammars::grammar_nodes::*;
-    use peg_rs::grammars::grammar_builder::GrammarBuilder;
+    use ::*;
 
     let grammar = GrammarBuilder::new(
         Production::new(

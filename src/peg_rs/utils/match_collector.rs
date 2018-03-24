@@ -1,7 +1,8 @@
 pub use std::collections::HashMap;
 pub use std::rc::Rc;
-use peg_rs::grammars::matches::capture_tree::CaptureTree;
-use peg_rs::grammars::parse_result::*;
+
+use peg_rs::utils::capture_tree::CaptureTree;
+use peg_rs::utils::parse_result::*;
 
 pub struct MatchCollector {
     collection: HashMap<String, Vec<Rc<CaptureTree>>>,

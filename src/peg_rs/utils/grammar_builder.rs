@@ -1,9 +1,10 @@
 use std::collections::HashMap;
 use std::rc::Rc;
 use std::cell::RefCell;
-use peg_rs::grammars::grammar_nodes::*;
-use peg_rs::grammars::grammar_nodes::production::ProductionNode;
-use peg_rs::grammars::grammar::Grammar;
+
+use peg_rs::grammar_nodes::*;
+use peg_rs::grammar_nodes::production::ProductionNode;
+use peg_rs::utils::grammar::Grammar;
 
 pub struct GrammarBuilder {
     root_prod: String,
